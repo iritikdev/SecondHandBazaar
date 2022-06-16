@@ -4,20 +4,23 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Modal,
-  Button,
   FlatList,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import AppText from './AppText';
-import Screen from './Screen';
+import Text from './Text';
 import defaultStyles from '../config/styles';
 import PickerItem from './PickerItem';
+import Screen from './Screen';
+import Button from './Button';
+import colors from '../config/colors';
 
 function AppPicker({
   icon,
   items,
+  numberOfColumns = 1,
   onSelectItem,
+  PickerItemComponent = PickerItem,
   placeholder,
   selectedItem,
   width = '100%',
@@ -37,9 +40,9 @@ function AppPicker({
             />
           )}
           {selectedItem ? (
-            <AppText style={styles.text}>{selectedItem.label}</AppText>
+            <Text style={styles.text}>{selectedItem.label}</Text>
           ) : (
-            <AppText style={styles.placeholder}>{placeholder}</AppText>
+            <Text style={styles.placeholder}>{placeholder}</Text>
           )}
 
           <MaterialCommunityIcons
@@ -51,12 +54,26 @@ function AppPicker({
       </TouchableWithoutFeedback>
       <Modal visible={modalVisible} animationType="slide">
         <Screen>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
+          {/* <Button title="Close" onPress={() => setModalVisible(false)} /> */}
+
+          <TouchableWithoutFeedback
+            onPress={() => setModalVisible(false)}
+            style={styles.close}
+          >
+            <MaterialCommunityIcons
+              name="close"
+              size={35}
+              color={colors.medium}
+            />
+          </TouchableWithoutFeedback>
+
           <FlatList
             data={items}
             keyExtractor={(item) => item.value.toString()}
+            numColumns={numberOfColumns}
             renderItem={({ item }) => (
-              <PickerItem
+              <PickerItemComponent
+                item={item}
                 label={item.label}
                 onPress={() => {
                   setModalVisible(false);
@@ -72,6 +89,11 @@ function AppPicker({
 }
 
 const styles = StyleSheet.create({
+  close: {
+    position: 'absolute',
+    top: 30,
+    right: 50,
+  },
   container: {
     backgroundColor: defaultStyles.colors.light,
     borderRadius: 25,
@@ -87,7 +109,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    color: defaultStyles.colors.medium,
     flex: 1,
   },
 });

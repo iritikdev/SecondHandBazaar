@@ -1,46 +1,68 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Image } from 'react-native';
 import * as Yup from 'yup';
+import jwtDecode from 'jwt-decode';
 
 import Screen from '../components/Screen';
-import { AppForm, AppFormField, SubmitButton } from '../components/forms';
+import {
+  ErrorMessage,
+  Form,
+  FormField,
+  SubmitButton,
+} from '../components/forms';
+import authAPI from '../api/auth';
+import AuthContext from '../auth/context';
+import authStorage from '../auth/storage';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
-  password: Yup.string().min(4).required().max(16).label('Password'),
+  password: Yup.string().required().min(4).label('Password'),
 });
 
 function LoginScreen(props) {
+  const authContext = React.useContext(AuthContext);
+  const [loginFailed, setLoginFailed] = React.useState(false);
+  const handleSubmit = async (loginInfo) => {
+    const result = await authAPI.login(loginInfo.email, loginInfo.password);
+    if (!result.ok) return setLoginFailed(true);
+    setLoginFailed(false);
+    const user = jwtDecode(result.data);
+    authContext.setUser(user);
+    authStorage.storeToken(result.data);
+  };
   return (
     <Screen style={styles.container}>
       <Image style={styles.logo} source={require('../assets/logo-red.png')} />
 
-      <AppForm
+      <Form
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
-        <AppFormField
+        <ErrorMessage
+          error={'Email or/and Password is incorrect.'}
+          visible={loginFailed}
+        />
+        <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          icon={'email'}
+          icon="email"
           keyboardType="email-address"
           name="email"
           placeholder="Email"
           textContentType="emailAddress"
         />
-        <AppFormField
+        <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          icon={'lock'}
+          icon="lock"
           name="password"
           placeholder="Password"
           secureTextEntry
           textContentType="password"
         />
-
-        <SubmitButton title={'login'} />
-      </AppForm>
+        <SubmitButton title="Login" />
+      </Form>
     </Screen>
   );
 }
@@ -57,4 +79,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+
 export default LoginScreen;

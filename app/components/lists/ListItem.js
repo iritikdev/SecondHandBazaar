@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, Image, TouchableHighlight } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React from "react";
+import { View, StyleSheet, Image, TouchableHighlight } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
-import colors from '../config/colors';
-import AppText from './AppText';
+import Text from "../Text";
+import colors from "../../config/colors";
 
 function ListItem({
   title,
@@ -20,21 +20,20 @@ function ListItem({
         <View style={styles.container}>
           {IconComponent}
           {image && <Image style={styles.image} source={image} />}
-
           <View style={styles.detailsContainer}>
-            <AppText numberOfLines={1} style={styles.title}>
+            <Text style={styles.title} numberOfLines={1}>
               {title}
-            </AppText>
+            </Text>
             {subTitle && (
-              <AppText numberOfLines={2} style={styles.subTitle}>
+              <Text style={styles.subTitle} numberOfLines={2}>
                 {subTitle}
-              </AppText>
+              </Text>
             )}
           </View>
           <MaterialCommunityIcons
-            name="chevron-right"
-            size={24}
             color={colors.medium}
+            name="chevron-right"
+            size={25}
           />
         </View>
       </TouchableHighlight>
@@ -44,15 +43,15 @@ function ListItem({
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
     padding: 15,
     backgroundColor: colors.white,
   },
   detailsContainer: {
     flex: 1,
     marginLeft: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   image: {
     width: 70,
@@ -63,7 +62,7 @@ const styles = StyleSheet.create({
     color: colors.medium,
   },
   title: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

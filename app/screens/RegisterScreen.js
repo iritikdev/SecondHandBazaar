@@ -1,51 +1,50 @@
-import { StyleSheet, View } from 'react-native';
-import * as Yup from 'yup';
+import React from "react";
+import { StyleSheet } from "react-native";
+import * as Yup from "yup";
 
-import Screen from '../components/Screen';
-import { AppForm, AppFormField, SubmitButton } from '../components/forms';
+import Screen from "../components/Screen";
+import { Form, FormField, SubmitButton } from "../components/forms";
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().max(40).required().label('Name'),
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().min(4).required().max(16).label('Password'),
+  name: Yup.string().required().label("Name"),
+  email: Yup.string().required().email().label("Email"),
+  password: Yup.string().required().min(4).label("Password"),
 });
 
-function RegisterScreen(props) {
+function RegisterScreen() {
   return (
     <Screen style={styles.container}>
-      <AppForm
-        initialValues={{ name: '', email: '', password: '' }}
+      <Form
+        initialValues={{ name: "", email: "", password: "" }}
         onSubmit={(values) => console.log(values)}
         validationSchema={validationSchema}
       >
-        <AppFormField
-          autoCapitalize="none"
+        <FormField
           autoCorrect={false}
-          icon={'account'}
+          icon="account"
           name="name"
           placeholder="Name"
-          textContentType="name"
         />
-        <AppFormField
+        <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          icon={'email'}
+          icon="email"
           keyboardType="email-address"
           name="email"
           placeholder="Email"
           textContentType="emailAddress"
         />
-        <AppFormField
+        <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          icon={'lock'}
+          icon="lock"
           name="password"
           placeholder="Password"
           secureTextEntry
           textContentType="password"
         />
-        <SubmitButton title={'Register'} />
-      </AppForm>
+        <SubmitButton title="Register" />
+      </Form>
     </Screen>
   );
 }
